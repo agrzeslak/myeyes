@@ -1,0 +1,46 @@
+«comment|//! Tiny cache used to preview syntax colours.»
+
+«keyword|use» «module|std»«punctuation|::»«module|collections»«punctuation|::»«type|HashMap»«punctuation|;»
+«keyword|use» «module|std»«punctuation|::»«module|fmt»«punctuation|;»
+
+«storage|const» «constant|MAX_ENTRIES»«punctuation|:» «type_builtin|usize» «operator|=» «number|1_024»«punctuation|;»
+
+«attribute|#[derive(Debug, Clone, PartialEq)]»
+«storage|pub» «keyword|struct» «type|Entry»«punctuation|<»«lifetime|'a»«punctuation|>» «punctuation|{»
+    «storage|pub» «field|key»«punctuation|:» «operator|&»«lifetime|'a» «type_builtin|str»«punctuation|,»
+    «storage|pub» «field|hits»«punctuation|:» «type_builtin|u32»«punctuation|,»
+    «field|stale»«punctuation|:» «type_builtin|bool»«punctuation|,»
+«punctuation|}»
+
+«comment|/// Returns the entry for `key`, inserting a fresh one if absent.»
+«storage|pub» «keyword|fn» «function|lookup»«punctuation|<»«lifetime|'a»«punctuation|>»«punctuation|(»
+    «parameter|cache»«punctuation|:» «operator|&»«storage|mut» «type|HashMap»«punctuation|<»«operator|&»«lifetime|'a» «type_builtin|str»«punctuation|,» «type|Entry»«punctuation|<»«lifetime|'a»«punctuation|>>,»
+    «parameter|key»«punctuation|:» «operator|&»«lifetime|'a» «type_builtin|str»«punctuation|,»
+«punctuation|)» «operator|->» «type|Result»«punctuation|<»«operator|&»«storage|mut» «type|Entry»«punctuation|<»«lifetime|'a»«punctuation|>,» «type|String»«punctuation|>» «punctuation|{»
+    «keyword_control|if» «variable|cache»«punctuation|.»«function_call|len»«punctuation|()» «operator|>=» «constant|MAX_ENTRIES» «punctuation|{»
+        «keyword_control|return» «type|Err»«punctuation|(»«macro|format!»«punctuation|(»«string|"cache full: {} entries»«escape|\n»«string|"»«punctuation|,» «constant|MAX_ENTRIES»«punctuation|));»
+    «punctuation|}»
+    «storage|let» «variable|entry» «operator|=» «variable|cache»«punctuation|.»«function_call|entry»«punctuation|(»«variable|key»«punctuation|)»«punctuation|.»«function_call|or_insert»«punctuation|(»«type|Entry» «punctuation|{» «field|key»«punctuation|,» «field|hits»«punctuation|:» «number|0»«punctuation|,» «field|stale»«punctuation|:» «boolean|false» «punctuation|});»
+    «variable|entry»«punctuation|.»«field|hits» «operator|+=» «number|1»«punctuation|;»
+    «type|Ok»«punctuation|(»«variable|entry»«punctuation|)»
+«punctuation|}»
+
+«keyword|impl» «module|fmt»«punctuation|::»«type|Display» «keyword|for» «type|Entry»«punctuation|<»«lifetime|'_»«punctuation|>» «punctuation|{»
+    «keyword|fn» «function|fmt»«punctuation|(»«operator|&»«variable|self»«punctuation|,» «parameter|f»«punctuation|:» «operator|&»«storage|mut» «module|fmt»«punctuation|::»«type|Formatter»«punctuation|)» «operator|->» «module|fmt»«punctuation|::»«type|Result» «punctuation|{»
+        «keyword_control|match» «variable|self»«punctuation|.»«field|stale» «punctuation|{»
+            «boolean|true» «operator|=>» «macro|write!»«punctuation|(»«variable|f»«punctuation|,» «string|"{} (stale)"»«punctuation|,» «variable|self»«punctuation|.»«field|key»«punctuation|),»
+            «boolean|false» «operator|=>» «macro|write!»«punctuation|(»«variable|f»«punctuation|,» «string|"{} x{}"»«punctuation|,» «variable|self»«punctuation|.»«field|key»«punctuation|,» «variable|self»«punctuation|.»«field|hits»«punctuation|),»
+        «punctuation|}»
+    «punctuation|}»
+«punctuation|}»
+
+«keyword|fn» «function|main»«punctuation|()» «punctuation|{»
+    «storage|let» «storage|mut» «variable|cache» «operator|=» «type|HashMap»«punctuation|::»«function_call|new»«punctuation|();»
+    «storage|let» «variable|unused» «operator|=» «number|3.14»«punctuation|;»  «diagnostic.warning|● unused variable: `unused`»
+    «keyword_control|for» «variable|word» «keyword_control|in» «punctuation|[»«string|"alpha"»«punctuation|,» «string|"beta"»«punctuation|,» «string|"alpha"»«punctuation|]» «punctuation|{»
+        «keyword_control|if» «storage|let» «type|Ok»«punctuation|(»«variable|e»«punctuation|)» «operator|=» «function_call|lookup»«punctuation|(»«operator|&»«storage|mut» «variable/ui.selection|cache»«punctuation|,» «variable|word»«punctuation|)» «punctuation|{»
+            «macro|println!»«punctuation|(»«string|"{e}"»«punctuation|);»
+        «punctuation|}»
+    «punctuation|}»
+    «variable|cache»«punctuation|.»«function_call|frobnicate»«punctuation|();»  «diagnostic.error|● no method named `frobnicate` found»
+«punctuation|}»

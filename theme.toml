@@ -1,0 +1,192 @@
+# myeyes — source of truth for the theme.
+#
+# Two layers:
+#
+#   [palette]  Named colours. Written in OKLCH, `oklch(L% C H)`, so lightness is
+#              perceptually uniform: equal L means equal perceived brightness,
+#              whatever the hue. Plain `#rrggbb` is also accepted.
+#   [ui], [syntax], [diagnostic], [ansi]
+#              Semantic roles. Values are *palette names*, never colours.
+#              Implementations (nvim, alacritty, ...) should consume roles, and
+#              only fall back to the palette when a role doesn't fit.
+#
+# Colours outside sRGB are brought into gamut by reducing chroma at fixed L and
+# H; `tools/preview.py` marks those entries so you can dial chroma back.
+#
+# Lineage: background and hue family are Solarized Light. Solarized's accents
+# range from L 58% to 65% and reach only 2.9–4.3:1 contrast on base3, so here
+# every accent shares one lightness (L 50%, ~5.5:1) and body text is darker.
+
+[meta]
+name = "myeyes"
+variant = "light"
+
+# ==============================================================================
+# Palette
+# ==============================================================================
+
+[palette]
+# Backgrounds, warm (hue ~90) like Solarized base3/base2, slightly less yellow:
+# full base3 chroma (0.026) read as yellow, 0.019 as too white.
+bg0 = "oklch(97.4% 0.0225 90)"    # Solarized base3 L/hue, ~87% chroma: main bg
+bg1 = "oklch(94.5% 0.026 90)"     # cursorline, statusline, floats
+bg2 = "oklch(91.0% 0.031 89)"     # visual selection, active item
+bg3 = "oklch(85.0% 0.029 88)"     # borders, split lines, inactive highlights
+
+# Foregrounds, cool (hue ~220) like Solarized base0x, but darker for contrast.
+# fg0/fg1 are near-neutral (C 0.020) near-black, ~17:1 and ~13.5:1 on bg0;
+# they keep a 10-point L gap so emphasis still reads above body text.
+fg0 = "oklch(18.0% 0.020 222)"    # emphasized text, cursor
+fg1 = "oklch(28.0% 0.020 222)"    # body text
+fg2 = "oklch(52.0% 0.025 220)"    # comments, secondary text
+fg3 = "oklch(64.0% 0.018 205)"    # line numbers, whitespace glyphs, non-text
+
+# Accents: Solarized hues, except yellow (86 -> 75, amber) and green (122 ->
+# 145, truer green; see its own note). Both originals sat next to the page
+# hue (90) and to each other, so yellow/green tokens blended into the cream and
+# into one another.
+#
+# All at L 50% (green excepted) so each has the same legibility and stays
+# >= 4.5:1 on selection and tinted backgrounds, not only on bg0.
+# Chroma is per-hue: each sits just inside the sRGB limit for its hue at this L
+# (yellow and cyan max out around 0.10 and 0.086; green gains room at 135).
+yellow  = "oklch(50% 0.103  75)"
+orange  = "oklch(50% 0.145  42)"
+red     = "oklch(50% 0.165  27)"
+magenta = "oklch(50% 0.165 356)"
+violet  = "oklch(50% 0.130 282)"
+blue    = "oklch(50% 0.130 248)"
+cyan    = "oklch(50% 0.085 190)"
+# Exception to the shared L: green only marks minor tokens (attributes,
+# lifetimes) and greens read lighter than other hues at equal L, so it sits
+# darker, as a forest green. Hue 145 keeps it clear of yellow and cyan.
+green   = "oklch(43% 0.131 145)"
+
+# Brighter accent variants for ANSI "bright" slots. On a light background the
+# conventional "bright" colours are *lighter*, i.e. lower contrast, so they
+# are only a small step up, to stay readable when programs use them for text.
+yellow_bright  = "oklch(58% 0.115  75)"
+orange_bright  = "oklch(58% 0.150  42)"
+red_bright     = "oklch(58% 0.170  27)"
+magenta_bright = "oklch(58% 0.170 356)"
+violet_bright  = "oklch(58% 0.130 282)"
+blue_bright    = "oklch(58% 0.130 248)"
+cyan_bright    = "oklch(58% 0.095 190)"
+green_bright   = "oklch(58% 0.150 145)"
+
+# Tinted backgrounds for diff/diagnostic lines: accent hue at background L.
+bg_red    = "oklch(93% 0.035  27)"
+bg_green  = "oklch(94% 0.040 122)"
+bg_yellow = "oklch(94% 0.050  86)"
+bg_blue   = "oklch(93% 0.030 248)"
+
+# ==============================================================================
+# UI roles
+# ==============================================================================
+
+[ui]
+bg = "bg0"
+fg = "fg1"
+fg_strong = "fg0"
+fg_muted = "fg2"
+fg_subtle = "fg3"
+
+cursor = "fg0"
+cursor_text = "bg0"
+cursorline = "bg1"
+selection = "bg2"
+selection_fg = "fg0"
+
+statusline = "bg1"
+float = "bg1"
+border = "bg3"
+line_number = "fg3"
+line_number_active = "fg1"
+
+search = "bg_yellow"
+match_paren = "bg3"
+link = "blue"
+
+# ==============================================================================
+# Syntax roles
+# ==============================================================================
+
+# Named after nvim tree-sitter capture groups, since that is the richest
+# consumer. Other implementations map down to the subset they support.
+#
+# All keywords, storage included, share magenta so `pub struct` / `let mut`
+# read as one unit, and yellow is left to types alone. Green, the most common
+# colour in Solarized, is demoted to the least important tokens (attributes,
+# lifetimes) so it no longer dominates the page.
+
+[syntax]
+comment = "fg2"
+keyword = "magenta"
+keyword_control = "magenta"     # if/for/return/match
+storage = "magenta"            # let/mut/pub/static/const
+type = "yellow"
+type_builtin = "yellow"
+function = "blue"
+function_call = "blue"
+macro = "orange"
+string = "cyan"
+escape = "red"
+number = "violet"
+boolean = "violet"
+constant = "violet"
+attribute = "green"
+lifetime = "green"
+module = "fg0"
+variable = "fg1"
+parameter = "fg1"
+field = "fg1"
+operator = "fg1"
+punctuation = "fg2"
+
+# ==============================================================================
+# Diagnostic and diff roles
+# ==============================================================================
+
+[diagnostic]
+error = "red"
+warning = "orange"
+info = "blue"
+hint = "cyan"
+ok = "green"
+error_bg = "bg_red"
+warning_bg = "bg_yellow"
+info_bg = "bg_blue"
+hint_bg = "bg_blue"
+
+diff_add = "green"
+diff_delete = "red"
+diff_change = "yellow"
+diff_add_bg = "bg_green"
+diff_delete_bg = "bg_red"
+diff_change_bg = "bg_yellow"
+
+# ==============================================================================
+# ANSI 16 (terminal emulators)
+# ==============================================================================
+
+# Light-theme convention: `black` is the darkest text colour, `white` a light
+# surface. Programs that print `white` text assume a dark background, so it is
+# kept as a surface tone rather than invisible pure background.
+
+[ansi]
+black = "fg0"
+red = "red"
+green = "green"
+yellow = "yellow"
+blue = "blue"
+magenta = "magenta"
+cyan = "cyan"
+white = "bg2"
+bright_black = "fg2"
+bright_red = "red_bright"
+bright_green = "green_bright"
+bright_yellow = "yellow_bright"
+bright_blue = "blue_bright"
+bright_magenta = "magenta_bright"
+bright_cyan = "cyan_bright"
+bright_white = "bg0"
