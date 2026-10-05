@@ -76,9 +76,15 @@ green_bright   = "oklch(58% 0.150 145)"
 
 # Tinted backgrounds for diff/diagnostic lines: accent hue at background L.
 bg_red    = "oklch(93% 0.035  27)"
-bg_green  = "oklch(94% 0.040 122)"
+bg_green  = "oklch(94% 0.040 145)"
 bg_yellow = "oklch(94% 0.050  86)"
 bg_blue   = "oklch(93% 0.030 248)"
+
+# Stronger tints for word-level diff highlights (changed text inside a changed
+# line) and the current search match, one step deeper than the line tints.
+bg_red_strong    = "oklch(87% 0.065  27)"
+bg_green_strong  = "oklch(88% 0.070 145)"
+bg_yellow_strong = "oklch(87% 0.085  80)"
 
 # ==============================================================================
 # UI roles
@@ -104,7 +110,11 @@ line_number = "fg3"
 line_number_active = "fg1"
 
 search = "bg_yellow"
+search_current = "bg_yellow_strong"
 match_paren = "bg3"
+# Borders drawn as line glyphs (float/popup frames) need more contrast than
+# `border`, which is meant for filled split lines and separators.
+float_border = "fg3"
 link = "blue"
 
 # ==============================================================================
@@ -164,6 +174,9 @@ diff_change = "yellow"
 diff_add_bg = "bg_green"
 diff_delete_bg = "bg_red"
 diff_change_bg = "bg_yellow"
+diff_add_word_bg = "bg_green_strong"
+diff_delete_word_bg = "bg_red_strong"
+diff_change_word_bg = "bg_yellow_strong"
 
 # ==============================================================================
 # ANSI 16 (terminal emulators)

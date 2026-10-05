@@ -1,0 +1,23 @@
+{
+    "name": "myeyes",
+    "background": "#fcf6e6",
+    "foreground": "#1e2b30",
+    "cursorColor": "#071418",
+    "selectionBackground": "#e9e1cb",
+    "black": "#071418",
+    "red": "#ae2e2a",
+    "green": "#086119",
+    "yellow": "#855907",
+    "blue": "#0b67a9",
+    "purple": "#a62d66",
+    "cyan": "#06726e",
+    "white": "#e9e1cb",
+    "brightBlack": "#596d73",
+    "brightRed": "#cb473f",
+    "brightGreen": "#33903c",
+    "brightYellow": "#a26f17",
+    "brightBlue": "#2e7fc3",
+    "brightPurple": "#c3457e",
+    "brightCyan": "#198c87",
+    "brightWhite": "#fcf6e6"
+}
