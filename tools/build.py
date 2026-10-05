@@ -633,7 +633,9 @@ CLAUDE_TOKENS: dict[str, str] = {
     "inverseText": "ui.cursor_text",
     "inactive": "ui.fg_muted",
     "inactiveShimmer": "ui.fg_subtle",
-    "subtle": "ui.fg_subtle",
+    # `subtle` carries readable hint text, so it gets the muted (5:1) grey
+    # rather than the faint one, which is meant for non-text decoration.
+    "subtle": "ui.fg_muted",
     "promptBorder": "ui.float_border",
     "promptBorderShimmer": "ui.fg_muted",
     # Brand accent: Claude's terracotta maps onto our orange.
@@ -643,8 +645,11 @@ CLAUDE_TOKENS: dict[str, str] = {
     "briefLabelClaude": "palette.orange",
     "claudeBlue_FOR_SYSTEM_SPINNER": "ansi.blue",
     "claudeBlueShimmer_FOR_SYSTEM_SPINNER": "ansi.bright_blue",
-    "permission": "ansi.blue",
-    "permissionShimmer": "ansi.bright_blue",
+    # `permission` is also the inline-code (`codespan`) colour in rendered
+    # markdown, which is where it's seen most, so it follows the brand orange.
+    # Permission prompts share it; Claude Code offers no separate token.
+    "permission": "palette.orange",
+    "permissionShimmer": "palette.orange_bright",
     "suggestion": "ansi.blue",
     "remember": "ansi.blue",
     "ide": "ansi.blue",
@@ -844,12 +849,20 @@ def install(theme: Theme):
             # lossy rewrite, leave it to be edited by hand.
             print(f"skip    {path} (not strict JSON; add extras/windows-terminal/myeyes.json by hand)")
             continue
-        shutil.copyfile(path, path.with_suffix(".json.bak"))
+        scheme = windows_terminal_scheme(theme)
+        if scheme in settings.get("schemes", []):
+            print(f"same    {path} (scheme 'myeyes' up to date)")
+            continue
+        # Back up once, before the first ever myeyes edit, and never overwrite
+        # it: a per-run backup would replace the original after a second tweak.
+        backup = path.with_name("settings.json.pre-myeyes.bak")
+        if not backup.exists():
+            shutil.copyfile(path, backup)
         schemes = [s for s in settings.get("schemes", []) if s.get("name") != "myeyes"]
-        schemes.append(windows_terminal_scheme(theme))
+        schemes.append(scheme)
         settings["schemes"] = schemes
         path.write_text(json.dumps(settings, indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
-        print(f"install {path} (scheme 'myeyes'; backup at {path.name}.bak)")
+        print(f"install {path} (scheme 'myeyes'; original kept at {backup.name})")
 
 
 # ==============================================================================
