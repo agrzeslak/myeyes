@@ -34,10 +34,11 @@ bg2 = "oklch(91.0% 0.031 89)"     # visual selection, active item
 bg3 = "oklch(85.0% 0.029 88)"     # borders, split lines, inactive highlights
 
 # Foregrounds, cool (hue ~220) like Solarized base0x, but darker for contrast.
-# fg0/fg1 are near-neutral (C 0.020) near-black, ~17:1 and ~13.5:1 on bg0;
-# they keep a 10-point L gap so emphasis still reads above body text.
+# fg0/fg1 are near-neutral (C 0.020): fg0 near-black (~17:1 on bg0) for
+# emphasis, fg1 a softer dark slate (~8.5:1) for body text. L 28% read as too
+# heavy for long reading; L 40% was the original Solarized-derived lightness.
 fg0 = "oklch(18.0% 0.020 222)"    # emphasized text, cursor
-fg1 = "oklch(28.0% 0.020 222)"    # body text
+fg1 = "oklch(40.0% 0.020 222)"    # body text
 fg2 = "oklch(52.0% 0.025 220)"    # comments, secondary text
 fg3 = "oklch(64.0% 0.018 205)"    # line numbers, whitespace glyphs, non-text
 

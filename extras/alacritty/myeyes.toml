@@ -3,7 +3,7 @@
 
 [colors.primary]
 background = "#fcf6e6"
-foreground = "#1e2b30"
+foreground = "#3c4a4f"
 dim_foreground = "#596d73"
 
 [colors.cursor]
@@ -16,7 +16,7 @@ text = "#071418"
 
 [colors.search.matches]
 background = "#faeac6"
-foreground = "#1e2b30"
+foreground = "#3c4a4f"
 
 [colors.search.focused_match]
 background = "#f2cf94"
