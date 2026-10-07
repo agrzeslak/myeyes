@@ -87,6 +87,12 @@ bg_red_strong    = "oklch(87% 0.065  27)"
 bg_green_strong  = "oklch(88% 0.070 145)"
 bg_yellow_strong = "oklch(87% 0.085  80)"
 
+# A step deeper again, for UIs that already tint the whole changed line with the
+# strong tint and need a third step for the changed text itself. L 76% keeps
+# body text on it above 4.5:1 (WCAG AA) while staying distinct from the line.
+bg_red_deep   = "oklch(76% 0.100  27)"
+bg_green_deep = "oklch(76% 0.100 145)"
+
 # ==============================================================================
 # UI roles
 # ==============================================================================
@@ -181,6 +187,8 @@ diff_change_bg = "bg_yellow"
 diff_add_word_bg = "bg_green_strong"
 diff_delete_word_bg = "bg_red_strong"
 diff_change_word_bg = "bg_yellow_strong"
+diff_add_word_deep_bg = "bg_green_deep"
+diff_delete_word_deep_bg = "bg_red_deep"
 
 # ==============================================================================
 # ANSI 16 (terminal emulators)

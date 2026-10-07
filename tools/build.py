@@ -738,14 +738,18 @@ CLAUDE_TOKENS: dict[str, str] = {
     "fastMode": "diagnostic.warning",
     "fastModeShimmer": "palette.orange_bright",
     "chromeYellow": "ansi.bright_yellow",
-    # Diffs: line tints, paler tints for context, and bright accents for
-    # word-level changes and the "+N/-N" counters (used as text colour there).
+    # Diffs: line tints, paler tints for context, and a deeper tint for
+    # word-level changes. Claude Code draws diffAddedWord/diffRemovedWord as the
+    # *background* behind changed text, keeping its normal text colours, and
+    # also as the text colour of the "+N/-N" counters. One value can't serve
+    # both, so readable changed text wins: the deep tints keep body text above
+    # 4.5:1 on them, at the cost of fainter counters (about 2:1 on the page).
     "diffAdded": "diagnostic.diff_add_word_bg",
     "diffRemoved": "diagnostic.diff_delete_word_bg",
     "diffAddedDimmed": "diagnostic.diff_add_bg",
     "diffRemovedDimmed": "diagnostic.diff_delete_bg",
-    "diffAddedWord": "ansi.bright_green",
-    "diffRemovedWord": "ansi.bright_red",
+    "diffAddedWord": "diagnostic.diff_add_word_deep_bg",
+    "diffRemovedWord": "diagnostic.diff_delete_word_deep_bg",
     # Surfaces.
     "userMessageBackground": "ui.cursorline",
     "userMessageBackgroundHover": "ui.selection",
