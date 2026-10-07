@@ -2,7 +2,7 @@
   "name": "myeyes",
   "base": "light",
   "overrides": {
-    "text": "#3c4a4f",
+    "text": "#344247",
     "inverseText": "#fcf6e6",
     "inactive": "#596d73",
     "inactiveShimmer": "#809091",
