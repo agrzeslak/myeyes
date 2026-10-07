@@ -683,7 +683,7 @@ def build_tmtheme(theme: Theme) -> Output:
 
 # Claude Code reads `~/.claude/themes/<slug>.json`: a base preset plus token
 # overrides. Token names were taken from the built-in `light` theme in the
-# installed binary (v2.1.283); unknown tokens are ignored by Claude Code, so a
+# installed binary (v2.1.283, re-checked v2.1.292); unknown tokens are ignored by Claude Code, so a
 # rename upstream degrades to the base preset rather than breaking.
 #
 # Intentionally not overridden: the `rainbow_*` tokens (decorative, used for
@@ -721,6 +721,7 @@ CLAUDE_TOKENS: dict[str, str] = {
     "planMode": "ansi.cyan",
     "background": "ansi.cyan",  # a teal accent token, not the page background
     "autoAccept": "syntax.keyword",
+    "autoAcceptShimmer": "palette.magenta_bright",  # added in v2.1.292
     "skill": "syntax.keyword",
     "merged": "syntax.keyword",
     "effortUltra": "syntax.keyword",

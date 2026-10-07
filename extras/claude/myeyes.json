@@ -27,6 +27,7 @@
     "planMode": "#06726e",
     "background": "#06726e",
     "autoAccept": "#a62d66",
+    "autoAcceptShimmer": "#c3457e",
     "skill": "#a62d66",
     "merged": "#a62d66",
     "effortUltra": "#a62d66",
