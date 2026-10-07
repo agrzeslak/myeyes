@@ -15,6 +15,7 @@ Outputs (all committed, so the repo works without running this):
     lua/lualine/themes/myeyes.lua         lualine theme
     extras/tmux/myeyes.conf               tmux status/border/message colours
     extras/fish/myeyes.theme              fish syntax-highlighting theme
+    extras/fzf/myeyes.opts                fzf colours (FZF_DEFAULT_OPTS_FILE)
     extras/codex/myeyes.tmTheme           Codex CLI syntax theme (also bat/Sublime)
     extras/claude/myeyes.json             Claude Code custom theme
     extras/windows-terminal/myeyes.json   Windows Terminal colour scheme
@@ -480,6 +481,55 @@ set-window-option -g copy-mode-current-match-style "bg={c('ui.search_current')}"
 
 
 # ==============================================================================
+# fzf
+# ==============================================================================
+
+# fzf has no theme files, only `--color` options, and defaults to a palette
+# built for dark terminals. This is an options file for FZF_DEFAULT_OPTS_FILE,
+# which fzf reads *before* FZF_DEFAULT_OPTS, so per-shell options (height,
+# layout) stay in the environment variable. fzf.vim invokes the same binary
+# and picks it up too.
+#
+# `bg:-1`/`gutter:-1` keep the terminal background, so fzf blends into
+# whatever surface it runs on. Matches use the keyword magenta, matching
+# Telescope and nvim-cmp.
+
+FZF_COLORS = {
+    "fg": "ui.fg",
+    "bg": None,  # terminal default
+    "hl": "syntax.keyword",
+    "fg+": "ui.fg_strong",
+    "bg+": "ui.selection",
+    "hl+": "syntax.keyword",
+    "gutter": None,
+    "query": "ui.fg_strong",
+    "prompt": "syntax.function",
+    "pointer": "syntax.keyword",
+    "marker": "diagnostic.ok",
+    "spinner": "ui.fg_muted",
+    "info": "ui.fg_muted",
+    "header": "ui.fg_muted",
+    "separator": "ui.border",
+    "scrollbar": "ui.border",
+    "border": "ui.float_border",
+    "label": "ui.fg_muted",
+}
+
+
+def build_fzf(theme: Theme) -> Output:
+    pairs = [f"{k}:{hx(theme, v) if v else -1}" for k, v in FZF_COLORS.items()]
+    lines = [
+        f"# {HEADER}",
+        "# Use with: set -gx FZF_DEFAULT_OPTS_FILE ~/.config/fzf/myeyes.opts",
+        # Base scheme first, so any element not listed below still gets
+        # fzf's light-background defaults rather than its dark ones.
+        "--color=light",
+        f"--color={','.join(pairs)}",
+    ]
+    return Output("extras/fzf/myeyes.opts", "\n".join(lines) + "\n")
+
+
+# ==============================================================================
 # fish
 # ==============================================================================
 
@@ -797,6 +847,7 @@ BUILDERS = [
     build_nvim,
     build_lualine,
     build_tmux,
+    build_fzf,
     build_fish,
     build_tmtheme,
     build_claude,
@@ -819,6 +870,7 @@ HOME = Path.home()
 INSTALL_TARGETS = {
     "extras/tmux/myeyes.conf": HOME / ".config/tmux/myeyes.conf",
     "extras/fish/myeyes.theme": HOME / ".config/fish/themes/myeyes.theme",
+    "extras/fzf/myeyes.opts": HOME / ".config/fzf/myeyes.opts",
     "extras/codex/myeyes.tmTheme": HOME / ".codex/themes/myeyes.tmTheme",
     "extras/claude/myeyes.json": HOME / ".claude/themes/myeyes.json",
     "extras/alacritty/myeyes.toml": HOME / ".config/alacritty/myeyes.toml",
@@ -826,7 +878,7 @@ INSTALL_TARGETS = {
 
 # Created on demand because their parent program directory is known to exist
 # whenever the program is installed.
-CREATE_PARENTS = {".config/tmux", ".config/fish/themes", ".codex/themes", ".claude/themes"}
+CREATE_PARENTS = {".config/tmux", ".config/fzf", ".config/fish/themes", ".codex/themes", ".claude/themes"}
 
 WINDOWS_TERMINAL_GLOB = (
     "/mnt/c/Users/*/AppData/Local/Packages/"
