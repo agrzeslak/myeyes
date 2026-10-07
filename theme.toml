@@ -106,6 +106,9 @@ selection_fg = "fg0"
 
 statusline = "bg1"
 float = "bg1"
+# Pinned enclosing-scope lines (nvim-treesitter-context). Same as the cursor
+# line; italics, set in the nvim build, are what mark them as pinned.
+context = "bg1"
 border = "bg3"
 line_number = "fg3"
 line_number_active = "fg1"

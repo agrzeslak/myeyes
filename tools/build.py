@@ -313,6 +313,11 @@ NVIM_GROUPS: dict[str, dict] = {
     "TelescopeSelectionCaret": {"fg": "syntax.keyword", "bg": "ui.selection"},
     "TelescopeMatching": {"fg": "syntax.keyword", "bold": True},
     "TelescopePromptPrefix": {"fg": "syntax.keyword"},
+    # nvim-treesitter-context. Its default links to NormalFloat, whose bg is the
+    # cursor line's, so pinned scope lines looked like real buffer lines.
+    # Italics mark them as pinned without adding another background shade.
+    "TreesitterContext": {"fg": "ui.fg", "bg": "ui.context", "italic": True},
+    "TreesitterContextLineNumber": {"fg": "ui.line_number", "bg": "ui.context", "italic": True},
     # nvim-cmp
     "CmpItemAbbr": {"fg": "ui.fg"},
     "CmpItemAbbrMatch": {"fg": "syntax.keyword", "bold": True},
