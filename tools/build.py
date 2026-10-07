@@ -440,6 +440,7 @@ def build_lualine(theme: Theme) -> Output:
 
 def build_tmux(theme: Theme) -> Output:
     c = lambda role: hx(theme, role)  # noqa: E731
+    c_rgb = lambda role: ";".join(map(str, theme.role(role).rgb))  # noqa: E731
     body = f"""\
 # {HEADER}
 # Source with: source-file ~/.config/tmux/myeyes.conf
@@ -459,6 +460,16 @@ set-option -g message-command-style "fg={c('ui.fg_strong')},bg={c('ui.selection'
 set-option -g display-panes-active-colour "{c('syntax.keyword')}"
 set-option -g display-panes-colour "{c('ui.fg_muted')}"
 set-window-option -g clock-mode-colour "{c('syntax.function')}"
+
+# Faint text (SGR 2). Windows Terminal renders faint by halving the colour's
+# brightness, which on a light background makes near-black text *darker*, so
+# faint and normal text look identical (e.g. Claude Code's ghost suggestions).
+# tmux emits faint via the terminfo `dim` capability, so for the terminal type
+# Windows Terminal reports we redefine `dim` as "set foreground to the muted
+# grey". Text with its own colour sets it after this and keeps that colour;
+# default-coloured faint text renders muted. Alacritty has a native dim
+# palette (see its theme), so it's left alone.
+set-option -as terminal-overrides ',xterm-256color:dim=\\E[38;2;{c_rgb('ui.fg_muted')}m'
 
 # Copy-mode selection and search matches.
 set-window-option -g mode-style "fg={c('ui.selection_fg')},bg={c('ui.selection')}"
@@ -753,6 +764,9 @@ def build_alacritty(theme: Theme) -> Output:
         "[colors.primary]",
         f'background = "{c("ui.bg")}"',
         f'foreground = "{c("ui.fg")}"',
+        # Faint text: Alacritty's default darkens colours, which on a light
+        # background makes faint text indistinguishable from normal text.
+        f'dim_foreground = "{c("ui.fg_muted")}"',
         "",
         "[colors.cursor]",
         f'cursor = "{c("ui.cursor")}"',
@@ -770,7 +784,9 @@ def build_alacritty(theme: Theme) -> Output:
         f'background = "{c("ui.search_current")}"',
         f'foreground = "{c("ui.fg_strong")}"',
     ]
-    for section, prefix in (("normal", ""), ("bright", "bright_")):
+    # Dim palette: on a light background "fainter" means lighter, which is
+    # what the bright variants already are.
+    for section, prefix in (("normal", ""), ("bright", "bright_"), ("dim", "bright_")):
         lines += ["", f"[colors.{section}]"]
         for name in ANSI_ORDER[:8]:
             lines.append(f'{name} = "{c(f"ansi.{prefix}{name}")}"')

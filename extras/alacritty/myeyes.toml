@@ -4,6 +4,7 @@
 [colors.primary]
 background = "#fcf6e6"
 foreground = "#1e2b30"
+dim_foreground = "#596d73"
 
 [colors.cursor]
 cursor = "#071418"
@@ -32,6 +33,16 @@ cyan = "#06726e"
 white = "#e9e1cb"
 
 [colors.bright]
+black = "#596d73"
+red = "#cb473f"
+green = "#33903c"
+yellow = "#a26f17"
+blue = "#2e7fc3"
+magenta = "#c3457e"
+cyan = "#198c87"
+white = "#fcf6e6"
+
+[colors.dim]
 black = "#596d73"
 red = "#cb473f"
 green = "#33903c"
