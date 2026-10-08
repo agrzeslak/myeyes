@@ -305,6 +305,12 @@ NVIM_GROUPS: dict[str, dict] = {
     "GitSignsAdd": {"fg": "diagnostic.diff_add"},
     "GitSignsChange": {"fg": "diagnostic.diff_change"},
     "GitSignsDelete": {"fg": "diagnostic.diff_delete"},
+    # Deleted lines in hunk previews (`preview_hunk`, `preview_hunk_inline`,
+    # `show_deleted`) default to DiffDelete, whose red fg is meant for diff-mode
+    # filler. On real code it made removed text lighter than added text, which
+    # keeps its normal colours on DiffAdd. Tint only, so both read the same.
+    "GitSignsDeletePreview": {"bg": "diagnostic.diff_delete_bg"},
+    "GitSignsDeleteVirtLn": {"bg": "diagnostic.diff_delete_bg"},
     # telescope
     "TelescopeNormal": {"link": "NormalFloat"},
     "TelescopeBorder": {"link": "FloatBorder"},
