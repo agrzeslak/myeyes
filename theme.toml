@@ -63,17 +63,32 @@ cyan    = "oklch(50% 0.085 190)"
 # darker, as a forest green. Hue 145 keeps it clear of yellow and cyan.
 green   = "oklch(43% 0.131 145)"
 
-# Brighter accent variants for ANSI "bright" slots. On a light background the
-# conventional "bright" colours are *lighter*, i.e. lower contrast, so they
-# are only a small step up, to stay readable when programs use them for text.
-yellow_bright  = "oklch(58% 0.115  75)"
-orange_bright  = "oklch(58% 0.150  42)"
-red_bright     = "oklch(58% 0.170  27)"
-magenta_bright = "oklch(58% 0.170 356)"
-violet_bright  = "oklch(58% 0.130 282)"
-blue_bright    = "oklch(58% 0.130 248)"
-cyan_bright    = "oklch(58% 0.095 190)"
-green_bright   = "oklch(58% 0.150 145)"
+# Lighter accent variants, for animation shimmer (Claude Code) and faint text
+# (Alacritty's dim palette), where the point is to read as *less* prominent
+# than the base accent. Below 4.5:1 on bg0, so not for text that must be read.
+yellow_light  = "oklch(58% 0.115  75)"
+orange_light  = "oklch(58% 0.150  42)"
+red_light     = "oklch(58% 0.170  27)"
+magenta_light = "oklch(58% 0.170 356)"
+violet_light  = "oklch(58% 0.130 282)"
+blue_light    = "oklch(58% 0.130 248)"
+cyan_light    = "oklch(58% 0.095 190)"
+green_light   = "oklch(58% 0.150 145)"
+
+# Accent variants for the ANSI "bright" slots. Programs use those for ordinary
+# text, so they must stay readable: L 53% is the lightest shared lightness that
+# keeps every hue at >= 4.5:1 on bg0. That leaves them only a small step from
+# the base accents, but on a light background a bigger "bright" step can only
+# go lighter, i.e. less legible. Yellow and cyan chroma is cut to their sRGB
+# limit at this L.
+yellow_bright  = "oklch(53% 0.111  75)"
+orange_bright  = "oklch(53% 0.150  42)"
+red_bright     = "oklch(53% 0.170  27)"
+magenta_bright = "oklch(53% 0.170 356)"
+violet_bright  = "oklch(53% 0.130 282)"
+blue_bright    = "oklch(53% 0.130 248)"
+cyan_bright    = "oklch(53% 0.091 190)"
+green_bright   = "oklch(53% 0.150 145)"
 
 # Tinted backgrounds for diff/diagnostic lines: accent hue at background L.
 bg_red    = "oklch(93% 0.035  27)"
@@ -194,9 +209,15 @@ diff_delete_word_deep_bg = "bg_red_deep"
 # ANSI 16 (terminal emulators)
 # ==============================================================================
 
-# Light-theme convention: `black` is the darkest text colour, `white` a light
-# surface. Programs that print `white` text assume a dark background, so it is
-# kept as a surface tone rather than invisible pure background.
+# Every slot is a readable text colour, because programs print text in all of
+# them. `white` and `bright_white` are dark: programs that pick them assume a
+# dark background and mean "normal text" and "emphasised text" (PSReadLine
+# colours everything you type `white`), so they mirror to body text and the
+# strongest text. The light-theme convention of keeping them as light surface
+# tones left that text at 1.2:1 and 1.0:1.
+#
+# Trade-off: programs that use `white` as a *background* for a highlight bar
+# (e.g. black-on-white selections) now get a dark bar.
 
 [ansi]
 black = "fg0"
@@ -206,7 +227,7 @@ yellow = "yellow"
 blue = "blue"
 magenta = "magenta"
 cyan = "cyan"
-white = "bg2"
+white = "fg1"
 bright_black = "fg2"
 bright_red = "red_bright"
 bright_green = "green_bright"
@@ -214,4 +235,4 @@ bright_yellow = "yellow_bright"
 bright_blue = "blue_bright"
 bright_magenta = "magenta_bright"
 bright_cyan = "cyan_bright"
-bright_white = "bg0"
+bright_white = "fg0"

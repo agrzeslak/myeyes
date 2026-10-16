@@ -712,16 +712,16 @@ CLAUDE_TOKENS: dict[str, str] = {
     "promptBorderShimmer": "ui.fg_muted",
     # Brand accent: Claude's terracotta maps onto our orange.
     "claude": "palette.orange",
-    "claudeShimmer": "palette.orange_bright",
+    "claudeShimmer": "palette.orange_light",
     "clawd_body": "palette.orange",
     "briefLabelClaude": "palette.orange",
     "claudeBlue_FOR_SYSTEM_SPINNER": "ansi.blue",
-    "claudeBlueShimmer_FOR_SYSTEM_SPINNER": "ansi.bright_blue",
+    "claudeBlueShimmer_FOR_SYSTEM_SPINNER": "palette.blue_light",
     # `permission` is also the inline-code (`codespan`) colour in rendered
     # markdown, which is where it's seen most, so it follows the brand orange.
     # Permission prompts share it; Claude Code offers no separate token.
     "permission": "palette.orange",
-    "permissionShimmer": "palette.orange_bright",
+    "permissionShimmer": "palette.orange_light",
     "suggestion": "ansi.blue",
     "remember": "ansi.blue",
     "ide": "ansi.blue",
@@ -732,7 +732,7 @@ CLAUDE_TOKENS: dict[str, str] = {
     "planMode": "ansi.cyan",
     "background": "ansi.cyan",  # a teal accent token, not the page background
     "autoAccept": "syntax.keyword",
-    "autoAcceptShimmer": "palette.magenta_bright",  # added in v2.1.292
+    "autoAcceptShimmer": "palette.magenta_light",  # added in v2.1.292
     "skill": "syntax.keyword",
     "merged": "syntax.keyword",
     "effortUltra": "syntax.keyword",
@@ -740,9 +740,9 @@ CLAUDE_TOKENS: dict[str, str] = {
     "success": "diagnostic.ok",
     "error": "diagnostic.error",
     "warning": "ansi.yellow",
-    "warningShimmer": "ansi.bright_yellow",
+    "warningShimmer": "palette.yellow_light",
     "fastMode": "diagnostic.warning",
-    "fastModeShimmer": "palette.orange_bright",
+    "fastModeShimmer": "palette.orange_light",
     "chromeYellow": "ansi.bright_yellow",
     # Diffs: line tints, paler tints for context, and a deeper tint for
     # word-level changes. Claude Code draws diffAddedWord/diffRemovedWord as the
@@ -850,12 +850,16 @@ def build_alacritty(theme: Theme) -> Output:
         f'background = "{c("ui.search_current")}"',
         f'foreground = "{c("ui.fg_strong")}"',
     ]
-    # Dim palette: on a light background "fainter" means lighter, which is
-    # what the bright variants already are.
-    for section, prefix in (("normal", ""), ("bright", "bright_"), ("dim", "bright_")):
+    for section, prefix in (("normal", ""), ("bright", "bright_")):
         lines += ["", f"[colors.{section}]"]
         for name in ANSI_ORDER[:8]:
             lines.append(f'{name} = "{c(f"ansi.{prefix}{name}")}"')
+    # Dim palette: on a light background "fainter" means lighter, so accents
+    # take their light variants and both text greys the muted one.
+    dim = {"black": "ui.fg_muted", "white": "ui.fg_muted"}
+    lines += ["", "[colors.dim]"]
+    for name in ANSI_ORDER[:8]:
+        lines.append(f'{name} = "{c(dim.get(name, f"palette.{name}_light"))}"')
     return Output("extras/alacritty/myeyes.toml", "\n".join(lines) + "\n")
 
 
