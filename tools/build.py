@@ -529,9 +529,16 @@ FZF_COLORS = {
 
 def build_fzf(theme: Theme) -> Output:
     pairs = [f"{k}:{hx(theme, v) if v else -1}" for k, v in FZF_COLORS.items()]
+    # Unlike every other output, this file carries no HEADER comment. fzf's
+    # own shell widgets (Ctrl-R, Ctrl-T, Alt-C) don't let fzf read the file:
+    # they join its lines with spaces, splice the result into
+    # FZF_DEFAULT_OPTS ahead of their own options, and unset
+    # FZF_DEFAULT_OPTS_FILE. fzf then treats a `#` at the start of a word as
+    # a comment running to the end of that one long string, which silently
+    # drops the colours and every widget option after it (`--ansi`,
+    # `--read0`, `--with-nth`, ...), leaving Ctrl-R showing raw escape codes
+    # and multi-line entries split across rows.
     lines = [
-        f"# {HEADER}",
-        "# Use with: set -gx FZF_DEFAULT_OPTS_FILE ~/.config/fzf/myeyes.opts",
         # Base scheme first, so any element not listed below still gets
         # fzf's light-background defaults rather than its dark ones.
         "--color=light",
